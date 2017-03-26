@@ -1,0 +1,8 @@
+# clojure
+profiles.clj
+.lein-env
+pom.properties
+
+# nrepl specific
+.nrepl-port
+target/
