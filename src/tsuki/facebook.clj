@@ -1,4 +1,4 @@
-(ns facebook-example.facebook
+(ns tsuki.facebook
   (:gen-class)
   (:require [clojure.string :as s]
             [org.httpkit.client :as http]

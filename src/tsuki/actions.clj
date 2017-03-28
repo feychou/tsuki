@@ -1,6 +1,6 @@
-(ns facebook-example.actions
+(ns tsuki.actions
   (:gen-class)
-  (:require [facebook-example.facebook :as fb]
+  (:require [tsuki.facebook :as fb]
             [org.httpkit.client :as http]
             [clojure.data.json :as json]
             [environ.core :refer [env]]))

@@ -1,5 +1,5 @@
-(defproject facebook-example "0.1.0-SNAPSHOT"
-  :description "Facebook Messenger Bot in Clojure"
+(defproject tsuki "0.1.0-SNAPSHOT"
+  :description "Facebook Messenger Bot in Clojure that sends astronomic pics of the day"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
@@ -15,7 +15,7 @@
   :plugins [[lein-ring "0.9.7"]
             [lein-environ "1.1.0"]]
   ;:hooks [environ.leiningen.hooks]
-  :ring {:handler facebook-example.core/app}
-  :uberjar-name "facebook-example-standalone.jar")
+  :ring {:handler tsuki.core/app}
+  :uberjar-name "tsuki-standalone.jar")
   ; :profiles {:default [:base :dev :user]
   ;            #_:production #_{:env {:production false}}})

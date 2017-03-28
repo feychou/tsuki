@@ -1,9 +1,9 @@
-(ns facebook-example.bot
+(ns tsuki.bot
   (:gen-class)
   (:require [clojure.string :as s]
             [environ.core :refer [env]]
-            [facebook-example.facebook :as fb]
-            [facebook-example.actions :as actions]))
+            [tsuki.facebook :as fb]
+            [tsuki.actions :as actions]))
 
 (defn on-message [payload]
   (println "on-message payload:")
