@@ -14,6 +14,6 @@
   (fb/send-message user-id (fb/text-message "Here are your directions"))
   (fb/send-message user-id (fb/text-message (str "https://google.com/maps/dir/" (:lat coordinates) "," (:long coordinates) "/48.190870,16.318560"))))
 
-(defn give-nasa-pic [user-id]
+(defn give-astro-pic [user-id]
   (let [response (json/read-str (slurp (str "https://api.nasa.gov/planetary/apod?api_key=" (env :nasa-api-key))) :key-fn keyword)]
     (fb/send-message user-id (fb/image-message (:url response)))))
