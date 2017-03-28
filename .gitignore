@@ -1,6 +1,7 @@
 # clojure
 profiles.clj
 .lein-env
+.lein-repl-history
 pom.properties
 
 # nrepl specific

@@ -1,6 +1,9 @@
 (ns facebook-example.actions
   (:gen-class)
-  (:require [facebook-example.facebook :as fb]))
+  (:require [facebook-example.facebook :as fb]
+            [org.httpkit.client :as http]
+            [clojure.data.json :as json]
+            [environ.core :refer [env]]))
 
 (defn greet [user-id]
   (println "Greeting: ")
@@ -10,3 +13,7 @@
 (defn send-directions [user-id coordinates]
   (fb/send-message user-id (fb/text-message "Here are your directions"))
   (fb/send-message user-id (fb/text-message (str "https://google.com/maps/dir/" (:lat coordinates) "," (:long coordinates) "/48.190870,16.318560"))))
+
+(defn give-nasa-pic [user-id]
+  (let [response (json/read-str (slurp (str "https://api.nasa.gov/planetary/apod?api_key=" (env :nasa-api-key))) :key-fn keyword)]
+    (fb/send-message user-id (fb/image-message (:url response)))))
