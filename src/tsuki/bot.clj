@@ -28,10 +28,6 @@
       (= postback "GET_STARTED") (actions/greet sender-id)
       :else (fb/send-message sender-id (fb/text-message "Sorry, I don't know how to handle that postback")))))
 
-(defn on-location [sender-id attachment]
-  (let [coordinates (get-in attachment [:payload :coordinates])]
-    (actions/send-directions sender-id coordinates)))
-
 (defn on-attachments [payload]
   (println "on-attachment payload:")
   (println payload)
