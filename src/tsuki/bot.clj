@@ -7,7 +7,7 @@
             [tsuki.facebook :as fb]
             [tsuki.actions :as actions]))
 
-(def apod-formatter (f/formatter "YYYY-MM-dd"))
+(def apod-formatter (f/formatter "yyyy-MM-dd"))
 
 (defn on-message [payload]
   (println "on-message payload:")
