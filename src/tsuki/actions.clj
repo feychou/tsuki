@@ -5,9 +5,9 @@
             [environ.core :refer [env]]))
 
 (defn greet [user-id]
-  (println "Greeting: ")
-  (println user-id)
-  (fb/send-message user-id (fb/quick-replies-message "Send me your location please" [{"content_type" "location"}])))
+  (fb/send-message user-id (fb/text-message "hi earthling ☾"))
+  (fb/send-message user-id (fb/text-message "i am tsuki and i report space facts to you"))
+  (fb/send-message user-id (fb/text-message "tap on the menu below whenever you feel like")))
 
 (defn send-astro-pic [user-id]
   (let [response (json/read-str (slurp (str "https://api.nasa.gov/planetary/apod?api_key=" (env :nasa-api-key))) :key-fn keyword)]
