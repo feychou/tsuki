@@ -10,7 +10,8 @@
                  [ring/ring-defaults "0.2.1"]
                  [ring/ring-json "0.4.0"]
                  [ring/ring-jetty-adapter "1.5.0"]
-                 [environ "1.1.0"]]
+                 [environ "1.1.0"]
+                 [clj-time "0.13.0"]]
   :min-lein-version "2.0.0"
   :plugins [[lein-ring "0.9.7"]
             [lein-environ "1.1.0"]]
