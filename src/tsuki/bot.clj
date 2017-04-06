@@ -2,12 +2,12 @@
   (:gen-class)
   (:require [clojure.string :as s]
             [environ.core :refer [env]]
-            [clj-time.core :as t]
-            [clj-time.format :as f]
+            [java-time :as t]
             [tsuki.facebook :as fb]
             [tsuki.actions :as actions]))
 
-(def apod-formatter (f/formatter "yyyy-MM-dd"))
+(def yesterday (t/minus (t/local-date)
+                        (t/days 1)))
 
 (defn on-message [payload]
   (println "on-message payload:")
@@ -23,7 +23,7 @@
 (defn on-postback [payload]
   (println "on-postback payload:")
   (println payload)
-  (println (f/unparse apod-formatter (t/minus (t/now) (t/days 1))))
+  (println (t/format "yyyy-MM-dd" yesterday))
   (let [sender-id (get-in payload [:sender :id])
         recipient-id (get-in payload [:recipient :id])
         time-of-message (get-in payload [:timestamp])
