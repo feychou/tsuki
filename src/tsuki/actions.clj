@@ -1,6 +1,7 @@
 (ns tsuki.actions
   (:gen-class)
   (:require [tsuki.facebook :as fb]
+            [tsuki.utils :as utils]
             [clojure.data.json :as json]
             [environ.core :refer [env]]))
 
@@ -28,7 +29,7 @@
           chosen-pic (get-astro-pic-by-date date)]
         (if (not= (:url today-pic) (:url chosen-pic))
           (send-astro-pic user-id chosen-pic)
-          (send-astro-pic user-id chosen-pic)))))
+          (send-astro-pic user-id (get-astro-pic-by-date utils/day-before-yesterday))))))
 
 (defn send-astro-emoji [user-id]
   (let [emojis [128125 128156 127773 127770 127776 128302 128126]]
