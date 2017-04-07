@@ -20,7 +20,6 @@
   (re-seq #"[^.!?;]+[.!?;]?" chunk))
 
 (defn send-astro-pic [user-id pic]
-  (println (get-chunks (:explanation pic)))
   (fb/send-message user-id (fb/image-message (:hdurl pic)))
   (fb/send-message user-id (fb/text-message (:title pic)))
   (go
