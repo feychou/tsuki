@@ -27,10 +27,9 @@
   (fb/send-message user-id (fb/text-message "tap on the menu below whenever you feel like")))
 
 (defn on-menu-pick
-  ([user-id] 
-    (let [response (get-today-astro-pic)]
-      (send-astro-pic user-id response)))
-  ([user-id date] 
+  ([user-id] (send-astro-pic user-id (get-today-astro-pic)))
+  ([user-id date] (send-astro-pic user-id (get-astro-pic date)))
+  ([user-id date postback] 
     (let [today-pic (get-today-astro-pic)
           chosen-pic (get-astro-pic date)]
         (if (not= (:url today-pic) (:url chosen-pic))

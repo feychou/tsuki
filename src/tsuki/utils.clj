@@ -19,5 +19,5 @@
 (defn random-date []
 	(str 
 		(rand-nth (range 1997 (last-year))) "-"
-		(rand-nth (concat (range 1 9) (add-nulls (range 10 12)))) "-"
-		(rand-nth (concat (range 1 9) (add-nulls (range 10 28))))))
+		(rand-nth (concat (add-nulls (range 1 9)) (range 10 12))) "-"
+		(rand-nth (concat (add-nulls (range 1 9)) (range 10 28)))))
