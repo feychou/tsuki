@@ -5,11 +5,17 @@
             [clojure.data.json :as json]
             [environ.core :refer [env]]))
 
-(defn get-today-astro-pic []
-  (json/read-str (slurp (str "https://api.nasa.gov/planetary/apod?api_key=" (env :nasa-api-key))) :key-fn keyword))
-
-(defn get-astro-pic-by-date [date]
+(defn get-astro-pic [date]
   (json/read-str (slurp (str "https://api.nasa.gov/planetary/apod?api_key=" (env :nasa-api-key) "&date=" date)) :key-fn keyword))
+
+(defn get-today-astro-pic []
+  (get-astro-pic nil))
+
+(defn make-adder [x]
+  (let [y x]
+    (fn [z] (+ y z))))
+(def add2 (make-adder 2))
+(add2 4)
 
 (defn send-astro-pic [user-id pic]
   (fb/send-message user-id (fb/image-message (:url pic)))
@@ -26,10 +32,10 @@
       (send-astro-pic user-id response)))
   ([user-id date] 
     (let [today-pic (get-today-astro-pic)
-          chosen-pic (get-astro-pic-by-date date)]
+          chosen-pic (get-astro-pic date)]
         (if (not= (:url today-pic) (:url chosen-pic))
           (send-astro-pic user-id chosen-pic)
-          (send-astro-pic user-id (get-astro-pic-by-date utils/day-before-yesterday))))))
+          (send-astro-pic user-id (get-astro-pic utils/day-before-yesterday))))))
 
 (defn send-astro-emoji [user-id]
   (let [emojis [128125 128156 127773 127770 127776 128302 128126]]
