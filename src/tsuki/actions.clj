@@ -25,10 +25,10 @@
       (send-astro-pic user-id response)))
   ([user-id date] 
     (let [today-pic (get-today-astro-pic)
-          yesterday-pic (get-astro-pic-by-date date)]
-        (if (not= (:url today-pic) (:url yesterday-pic))
-          (send-astro-pic user-id yesterday-pic)
-          (send-astro-pic user-id yesterday-pic)))))
+          chosen-pic (get-astro-pic-by-date date)]
+        (if (not= (:url today-pic) (:url chosen-pic))
+          (send-astro-pic user-id chosen-pic)
+          (send-astro-pic user-id chosen-pic)))))
 
 ;(defn send-astro-pic [user-id & [date]]
 ;  (let [response get-today-astro-pic]
