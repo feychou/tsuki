@@ -29,6 +29,7 @@
       (= postback "GET_STARTED") (actions/greet sender-id)
       (= postback "TODAY_APOD") (actions/on-menu-pick sender-id)
       (= postback "YESTERDAY_APOD") (actions/on-menu-pick sender-id utils/yesterday)
+      (= postback "RANDOM_APOD") (actions/on-menu-pick sender-id (utils/random-date))
       :else (fb/send-message sender-id (fb/text-message "Sorry, I don't know how to handle that postback")))))
 
 (defn on-attachments [payload]
