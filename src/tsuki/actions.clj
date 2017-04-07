@@ -9,8 +9,8 @@
   (fb/send-message user-id (fb/text-message "i am tsuki and i report space facts to you"))
   (fb/send-message user-id (fb/text-message "tap on the menu below whenever you feel like")))
 
-(defn send-astro-pic [user-id]
-  (let [response (json/read-str (slurp (str "https://api.nasa.gov/planetary/apod?api_key=" (env :nasa-api-key))) :key-fn keyword)]
+(defn send-astro-pic [user-id & [date]]
+  (let [response (json/read-str (slurp (str "https://api.nasa.gov/planetary/apod?api_key=" (env :nasa-api-key) "&date=" date)) :key-fn keyword)]
     (fb/send-message user-id (fb/image-message (:url response)))
     (fb/send-message user-id (fb/text-message (:title response)))))
 

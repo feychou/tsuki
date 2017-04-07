@@ -2,12 +2,9 @@
   (:gen-class)
   (:require [clojure.string :as s]
             [environ.core :refer [env]]
-            [java-time :as t]
             [tsuki.facebook :as fb]
-            [tsuki.actions :as actions]))
-
-(def yesterday (t/minus (t/local-date)
-                        (t/days 1)))
+            [tsuki.actions :as actions]
+            [tsuki.utils :as utils]))
 
 (defn on-message [payload]
   (println "on-message payload:")
@@ -23,7 +20,7 @@
 (defn on-postback [payload]
   (println "on-postback payload:")
   (println payload)
-  (println (t/format "yyyy-MM-dd" yesterday))
+  (println (t/format "yyyy-MM-dd" utils/yesterday))
   (let [sender-id (get-in payload [:sender :id])
         recipient-id (get-in payload [:recipient :id])
         time-of-message (get-in payload [:timestamp])
@@ -32,6 +29,7 @@
     (cond
       (= postback "GET_STARTED") (actions/greet sender-id)
       (= postback "TODAY_APOD") (actions/send-astro-pic sender-id)
+      (= postback "YESTERDAY_APOD") (actions/send-astro-pic sender-id (t/format "yyyy-MM-dd" utils/yesterday))
       :else (fb/send-message sender-id (fb/text-message "Sorry, I don't know how to handle that postback")))))
 
 (defn on-attachments [payload]
