@@ -30,11 +30,6 @@
           (send-astro-pic user-id chosen-pic)
           (send-astro-pic user-id chosen-pic)))))
 
-;(defn send-astro-pic [user-id & [date]]
-;  (let [response get-today-astro-pic]
-;    (fb/send-message user-id (fb/image-message (:url response)))
-;    (fb/send-message user-id (fb/text-message (:title response)))))
-
 (defn send-astro-emoji [user-id]
   (let [emojis [128125 128156 127773 127770 127776 128302 128126]]
     (fb/send-message user-id (fb/text-message (format "%c" (int (rand-nth emojis)))))))

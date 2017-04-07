@@ -2,4 +2,9 @@
   (:gen-class)
   (:require [java-time :as t]))
 
-(def yesterday (t/format "yyyy-MM-dd" (t/minus (t/local-date) (t/days 1))))
+(defn get-day [x]
+	(t/format "yyyy-MM-dd" (t/minus (t/local-date) (t/days x))))
+
+(def yesterday (get-day 1))
+
+(def day-before-yesterday (get-day 2))
