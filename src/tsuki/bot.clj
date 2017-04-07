@@ -27,8 +27,8 @@
         referral (get-in payload [:postback :referral :ref])]
     (cond
       (= postback "GET_STARTED") (actions/greet sender-id)
-      (= postback "TODAY_APOD") (actions/send-astro-pic sender-id)
-      (= postback "YESTERDAY_APOD") (actions/send-astro-pic sender-id utils/yesterday)
+      (= postback "TODAY_APOD") (actions/on-menu-pick sender-id)
+      (= postback "YESTERDAY_APOD") (actions/on-menu-pick sender-id utils/yesterday)
       :else (fb/send-message sender-id (fb/text-message "Sorry, I don't know how to handle that postback")))))
 
 (defn on-attachments [payload]
