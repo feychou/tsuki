@@ -3,6 +3,11 @@
   (:require [tsuki.facebook :as fb]
             [tsuki.utils :as utils]
             [clojure.data.json :as json]
+            [clojure.string :as s]
+            [clojure.core.async
+             :as a
+             :refer [>! <! >!! <!! go chan buffer close! thread
+                     alts! alts!! timeout]]
             [environ.core :refer [env]]))
 
 (defn get-astro-pic [date]
@@ -11,18 +16,21 @@
 (defn get-today-astro-pic []
   (get-astro-pic nil))
 
-(defn make-adder [x]
-  (let [y x]
-    (fn [z] (+ y z))))
-(def add2 (make-adder 2))
-(add2 4)
+(defn get-chunks [chunk]
+  (re-seq #"[^.!?;]+[.!?;]?" chunk))
 
 (defn send-astro-pic [user-id pic]
-  (fb/send-message user-id (fb/image-message (:url pic)))
-  (fb/send-message user-id (fb/text-message (:title pic))))
+  (println (get-chunks (:explanation pic)))
+  (fb/send-message user-id (fb/image-message (:hdurl pic)))
+  (fb/send-message user-id (fb/text-message (:title pic)))
+  (go
+    (fb/type-on user-id)
+    (doseq [text (get-chunks (:explanation pic))]
+      (fb/type-on user-id)
+      (<! (timeout 5000))
+      (fb/send-message user-id (fb/text-message text)))))
 
-(defn greet [user-id]
-  (fb/send-message user-id (fb/text-message "hi earthling ☾"))
+(defn greet [user-id]  (fb/send-message user-id (fb/text-message "hi earthling ☾"))
   (fb/send-message user-id (fb/text-message "i am tsuki and i report space facts to you"))
   (fb/send-message user-id (fb/text-message "tap on the menu below whenever you feel like")))
 
