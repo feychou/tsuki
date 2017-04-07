@@ -20,7 +20,6 @@
 (defn on-postback [payload]
   (println "on-postback payload:")
   (println payload)
-  (println (t/format "yyyy-MM-dd" utils/yesterday))
   (let [sender-id (get-in payload [:sender :id])
         recipient-id (get-in payload [:recipient :id])
         time-of-message (get-in payload [:timestamp])
@@ -29,7 +28,7 @@
     (cond
       (= postback "GET_STARTED") (actions/greet sender-id)
       (= postback "TODAY_APOD") (actions/send-astro-pic sender-id)
-      (= postback "YESTERDAY_APOD") (actions/send-astro-pic sender-id (t/format "yyyy-MM-dd" utils/yesterday))
+      (= postback "YESTERDAY_APOD") (actions/send-astro-pic sender-id utils/yesterday)
       :else (fb/send-message sender-id (fb/text-message "Sorry, I don't know how to handle that postback")))))
 
 (defn on-attachments [payload]
