@@ -6,8 +6,7 @@
             [clojure.string :as s]
             [clojure.core.async
              :as a
-             :refer [>! <! >!! <!! go chan buffer close! thread
-                     alts! alts!! timeout]]
+             :refer [<! go timeout]]
             [environ.core :refer [env]]))
 
 (defn get-astro-pic [date]
@@ -26,12 +25,18 @@
     (fb/type-on user-id)
     (doseq [text (get-chunks (:explanation pic))]
       (fb/type-on user-id)
-      (<! (timeout 5000))
+      (<! (timeout 2000))
       (fb/send-message user-id (fb/text-message text)))))
 
-(defn greet [user-id]  (fb/send-message user-id (fb/text-message "hi earthling ☾"))
-  (fb/send-message user-id (fb/text-message "i am tsuki and i report space facts to you"))
-  (fb/send-message user-id (fb/text-message "tap on the menu below whenever you feel like")))
+(defn greet [user-id]
+  (go
+    (fb/send-message user-id (fb/text-message "hi earthling ☾"))
+    (fb/type-on user-id)
+    (<! (timeout 2000))
+    (fb/send-message user-id (fb/text-message "i am tsuki and i report space facts to you"))
+    (fb/type-on user-id)
+    (<! (timeout 2000))
+    (fb/send-message user-id (fb/text-message "tap on the menu below whenever you feel like it"))))
 
 (defn on-menu-pick
   ([user-id] (send-astro-pic user-id (get-today-astro-pic)))
