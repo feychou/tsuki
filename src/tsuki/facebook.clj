@@ -58,10 +58,6 @@
 (defn text-message [message-text]
   {:text message-text})
 
-(defn quick-replies-message [message-text quick-replies]
-  {:text message-text
-   :quick_replies quick-replies})
-
 (defn type-on [recipient-id]
   (send-api {:recipient {:id recipient-id}
              :sender_action "typing_on"}))
