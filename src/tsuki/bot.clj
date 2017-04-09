@@ -9,13 +9,7 @@
 (defn on-message [payload]
   (println "on-message payload:")
   (println payload)
-  (let [sender-id (get-in payload [:sender :id])
-        recipient-id (get-in payload [:recipient :id])
-        time-of-message (get-in payload [:timestamp])
-        message-text (get-in payload [:message :text])]
-    (cond
-      (s/includes? (s/lower-case message-text) "gimme") (actions/send-astro-pic sender-id)
-      :else (actions/send-astro-emoji sender-id))))
+  (actions/send-astro-emoji (get-in payload [:sender :id])))
 
 (defn on-postback [payload]
   (println "on-postback payload:")
@@ -35,9 +29,4 @@
 (defn on-attachments [payload]
   (println "on-attachment payload:")
   (println payload)
-  (let [sender-id (get-in payload [:sender :id])
-        recipient-id (get-in payload [:recipient :id])
-        time-of-message (get-in payload [:timestamp])
-        attachments (get-in payload [:message :attachments])
-        attachment (first attachments)]
-    (actions/send-astro-emoji sender-id)))
+  (actions/send-astro-emoji (get-in payload [:sender :id])))
