@@ -28,7 +28,7 @@
     (<! (timeout 2000))
     (let [pic-date (s/split (:date pic) #"-")]
       (fb/send-message user-id 
-        (fb/button-template (first (get-chunks (:explanation pic))) [{:title "Read up more"
+        (fb/button-template (first (get-chunks (:explanation pic))) [{:title "Read more"
                                                                        :type "web_url"
                                                                        :url (str "https://apod.nasa.gov/apod/ap" (subs (first pic-date) 2 4) (second pic-date) (nth pic-date 2) ".html")}])))
     (fb/type-on user-id)
