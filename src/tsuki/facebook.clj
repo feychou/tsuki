@@ -61,3 +61,9 @@
 (defn type-on [recipient-id]
   (send-api {:recipient {:id recipient-id}
              :sender_action "typing_on"}))
+
+(defn button-template [text buttons]
+  {:attachment {:type "template",
+                :payload {:template_type "button"
+                          :text text
+                          :buttons buttons}}})

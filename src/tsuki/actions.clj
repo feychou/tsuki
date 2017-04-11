@@ -10,7 +10,9 @@
             [environ.core :refer [env]]))
 
 (defn get-astro-pic [date]
-  (json/read-str (slurp (str "https://api.nasa.gov/planetary/apod?api_key=" (env :nasa-api-key) "&date=" date)) :key-fn keyword))
+  (json/read-str
+    (slurp (str "https://api.nasa.gov/planetary/apod?api_key=" (env :nasa-api-key) "&date=" date))
+    :key-fn keyword))
 
 (defn get-today-astro-pic []
   (get-astro-pic nil))
@@ -26,17 +28,29 @@
     (doseq [text (take 2 (get-chunks (:explanation pic)))]
       (fb/type-on user-id)
       (<! (timeout 2000))
-      (fb/send-message user-id (fb/text-message text)))))
+      (fb/send-message user-id (fb/text-message text)))
+    (fb/type-on user-id)
+    (<! (timeout 2000))
+    (fb/send-message user-id 
+      (fb/button-template "What do you want me to do next?" [{:title "Send today's APOD"
+                                                              :type "postback"
+                                                              :payload "TODAY_APOD"}
+                                                             {:title "Send yda's APOD"
+                                                              :type "postback"
+                                                              :payload "YESTERDAY_APOD"}
+                                                             {:title "Send random APOD"
+                                                              :type "postback"
+                                                              :payload "RANDOM_APOD"}]))))
 
 (defn greet [user-id]
   (go
-    (fb/send-message user-id (fb/text-message "hi earthling ☾"))
+    (fb/send-message user-id (fb/text-message "Hi earthling ☾"))
     (fb/type-on user-id)
     (<! (timeout 2000))
-    (fb/send-message user-id (fb/text-message "i am tsuki and i report space facts to you"))
+    (fb/send-message user-id (fb/text-message "I am Tsuki and I report space facts to you."))
     (fb/type-on user-id)
     (<! (timeout 2000))
-    (fb/send-message user-id (fb/text-message "tap on the menu below whenever you feel like it"))))
+    (fb/send-message user-id (fb/text-message "Tap on the menu below whenever you feel like it."))))
 
 (defn on-menu-pick
   ([user-id] (send-astro-pic user-id (get-today-astro-pic)))
