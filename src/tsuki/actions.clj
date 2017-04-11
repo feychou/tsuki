@@ -24,10 +24,11 @@
   (fb/send-message user-id (fb/image-message (:hdurl pic)))
   (fb/send-message user-id (fb/text-message (:title pic)))
   (fb/type-on user-id)
-  (fb/send-message user-id 
-    (fb/button-template (first (get-chunks (:explanation pic))) [{:title "Read up more"
-                                                                   :type "web_url"
-                                                                   :url "https://apod.nasa.gov/apod/ap170410.html"}]))
+  (let [pic-date (s/split (:date pic) #"-")]
+    (fb/send-message user-id 
+      (fb/button-template (first (get-chunks (:explanation pic))) [{:title "Read up more"
+                                                                     :type "web_url"
+                                                                     :url (str "https://apod.nasa.gov/apod/ap" (subs (first pic-date) 2 4) (second pic-date) (nth pic-date 2) ".html")}])))
   (fb/type-on user-id)
   (fb/send-message user-id 
     (fb/button-template "What do you want me to do next?" [{:title "Send today's APOD"
