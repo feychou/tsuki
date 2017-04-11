@@ -23,24 +23,22 @@
 (defn send-astro-pic [user-id pic]
   (fb/send-message user-id (fb/image-message (:hdurl pic)))
   (fb/send-message user-id (fb/text-message (:title pic)))
-  (go
-    (fb/type-on user-id)
-    (doseq [text (take 2 (get-chunks (:explanation pic)))]
-      (fb/type-on user-id)
-      (<! (timeout 2000))
-      (fb/send-message user-id (fb/text-message text)))
-    (fb/type-on user-id)
-    (<! (timeout 2000))
-    (fb/send-message user-id 
-      (fb/button-template "What do you want me to do next?" [{:title "Send today's APOD"
-                                                              :type "postback"
-                                                              :payload "TODAY_APOD"}
-                                                             {:title "Send yda's APOD"
-                                                              :type "postback"
-                                                              :payload "YESTERDAY_APOD"}
-                                                             {:title "Send random APOD"
-                                                              :type "postback"
-                                                              :payload "RANDOM_APOD"}]))))
+  (fb/type-on user-id)
+  (fb/send-message user-id 
+    (fb/button-template (first (get-chunks (:explanation pic))) [{:title "Read up more"
+                                                                   :type "web_url"
+                                                                   :url "https://apod.nasa.gov/apod/ap170410.html"}]))
+  (fb/type-on user-id)
+  (fb/send-message user-id 
+    (fb/button-template "What do you want me to do next?" [{:title "Send today's APOD"
+                                                            :type "postback"
+                                                            :payload "TODAY_APOD"}
+                                                           {:title "Send yda's APOD"
+                                                            :type "postback"
+                                                            :payload "YESTERDAY_APOD"}
+                                                           {:title "Send random APOD"
+                                                            :type "postback"
+                                                            :payload "RANDOM_APOD"}])))
 
 (defn greet [user-id]
   (go
