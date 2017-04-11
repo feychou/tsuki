@@ -23,7 +23,7 @@
   (fb/send-message user-id (fb/text-message (:title pic)))
   (go
     (fb/type-on user-id)
-    (doseq [text (get-chunks (:explanation pic))]
+    (doseq [text (take 2 (get-chunks (:explanation pic)))]
       (fb/type-on user-id)
       (<! (timeout 2000))
       (fb/send-message user-id (fb/text-message text)))))
