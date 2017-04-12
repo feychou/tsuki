@@ -52,7 +52,7 @@
     (fb/send-message user-id (fb/text-message "I am Tsuki and I report space facts to you."))
     (fb/type-on user-id)
     (<! (timeout 2000))
-    (fb/send-message user-id (fb/text-message "Tap on the menu below whenever you feel like it."))))
+    (fb/send-message user-id (fb/text-message "Tap on the menu icon below whenever you feel like it."))))
 
 (defn on-menu-pick
   ([user-id] (send-astro-pic user-id (get-today-astro-pic)))
