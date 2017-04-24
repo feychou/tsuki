@@ -2,6 +2,7 @@
   (:gen-class)
   (:require [tsuki.facebook :as fb]
             [tsuki.utils :as utils]
+            [taoensso.faraday :as far]
             [clojure.data.json :as json]
             [clojure.string :as s]
             [clojure.core.async
@@ -44,7 +45,12 @@
                                                               :type "postback"
                                                               :payload "RANDOM_APOD"}]))))
 
+(defn save-subscriber [user-id]
+  (far/put-item utils/dynamo-creds
+    :tsuki-users {:fb-id user-id}))
+
 (defn greet [user-id]
+  (save-subscriber user-id)
   (go
     (fb/send-message user-id (fb/text-message "Hi earthling ☾"))
     (fb/type-on user-id)

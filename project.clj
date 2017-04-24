@@ -12,7 +12,8 @@
                  [ring/ring-json "0.4.0"]
                  [ring/ring-jetty-adapter "1.5.0"]
                  [environ "1.1.0"]
-                 [clojure.java-time "0.2.2"]]
+                 [clojure.java-time "0.2.2"]
+                 [com.taoensso/faraday "1.9.0"]]
   :min-lein-version "2.0.0"
   :plugins [[lein-ring "0.9.7"]
             [lein-environ "1.1.0"]]

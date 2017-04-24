@@ -1,7 +1,12 @@
 (ns tsuki.utils
   (:gen-class)
   (:require [java-time :as t]
-            [clojure.string :as s]))
+            [clojure.string :as s]
+            [environ.core :refer [env]]))
+
+(def dynamo-creds {:access-key (env :dynamo-access-key)
+                   :secret-key (env :dynamo-secret-key)
+                   :endpoint (env :dynamo-endpoint)})
 
 (defn get-day [x]
   (t/format "yyyy-MM-dd" (t/minus (t/local-date) (t/days x))))
