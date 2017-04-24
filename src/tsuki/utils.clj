@@ -8,6 +8,8 @@
                    :secret-key (env :dynamo-secret-key)
                    :endpoint (env :dynamo-endpoint)})
 
+(def full-moon (format "%c" (int 127773)))
+
 (defn get-day [x]
   (t/format "yyyy-MM-dd" (t/minus (t/local-date) (t/days x))))
 

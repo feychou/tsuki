@@ -89,25 +89,25 @@
                                                          [{:content_type "text" :title "Yes" :payload "SUBSCRIBE"}
                                                           {:content_type "text" :title "No" :payload "NO_SUBSCRIPTION"}])))
     (do
-      (fb/send-message user-id (fb/quick-replies-message "Are you sure you want to unsubscribe?"
+      (fb/send-message user-id (fb/quick-replies-message "Do you want to unsubscribe?"
                                                    [{:content_type "text" :title "Yes" :payload "UNSUBSCRIBE"}
                                                     {:content_type "text" :title "No" :payload "NO_UNSUBSCRIPTION"}])))))
 
 (defn motivate [user-id]
   (fb/send-message user-id (fb/text-message "Good choice."))
-  (fb/send-message user-id (fb/text-message (str "Space is way too dangerous on your own " (format "%c" (int 127773))))))
+  (fb/send-message user-id (fb/text-message (str "Space is way too dangerous on your own " utils/full-moon))))
 
 (defn demotivate [user-id]
   (fb/send-message user-id (fb/text-message "Did you know?"))
-  (fb/send-message user-id (fb/text-message (str "Your chances of becoming an astronaut on your own are embarrassingly close to zero " (format "%c" (int 127773))))))
+  (fb/send-message user-id (fb/text-message (str "Your chances of becoming an astronaut on your own are embarrassingly close to zero " utils/full-moon))))
 
 (defn subscribe [user-id]
   (save-subscriber user-id)
   (fb/send-message user-id (fb/text-message "Space is dangerous on your own."))
-  (fb/send-message user-id (fb/text-message (str "I hope I'll make a nice companion " (format "%c" (int 127773))))))
+  (fb/send-message user-id (fb/text-message (str "I hope I'll make a nice companion " utils/full-moon))))
   
 (defn unsubscribe [user-id]
   (delete-subscriber user-id)
   (fb/send-message user-id (fb/text-message "It's sad to see you go."))
-  (fb/send-message user-id (fb/text-message (str "I'll be here if you need me again " (format "%c" (int 127773))))))
+  (fb/send-message user-id (fb/text-message (str "I'll be here if you need me again " utils/full-moon))))
   
