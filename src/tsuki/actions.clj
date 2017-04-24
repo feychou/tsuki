@@ -53,6 +53,10 @@
   (far/put-item utils/dynamo-creds
     :tsuki-users {:fb-id user-id}))
 
+(defn delete-subscriber [user-id]
+  (far/delete-item utils/dynamo-creds
+    :tsuki-users {:fb-id user-id}))
+
 (defn get-subscriber [user-id]
   (far/get-item utils/dynamo-creds :tsuki-users {:fb-id user-id}))
 
@@ -79,11 +83,30 @@
 (defn on-manage-subscription [user-id]
   (if (nil? (get-subscriber user-id))
     (do
-      (fb/send-message user-id (fb/text-message "If you subscribe I'll make sure to send you a new astropic every day."))
+      (fb/send-message user-id (fb/text-message (str "If you subscribe I'll make sure to send you a new astropic every day " (format "%c" (int 128302)))))
       (fb/send-message user-id (fb/quick-replies-message "Do you want to subscribe?"
                                                          [{:content_type "text" :title "Yes" :payload "SUBSCRIBE"}
                                                           {:content_type "text" :title "No" :payload "NO_SUBSCRIPTION"}])))
     (do
-      (fb/send-message user-id (fb/text-message "Do you wish to unsubscribe?")))))
+      (fb/send-message user-id (fb/quick-replies-message "Are you sure you want to unsubscribe?"
+                                                   [{:content_type "text" :title "Yes" :payload "UNSUBSCRIBE"}
+                                                    {:content_type "text" :title "No" :payload "NO_UNSUBSCRIPTION"}])))))
+
+(defn motivate [user-id]
+  (fb/send-message user-id (fb/text-message "Good choice."))
+  (fb/send-message user-id (fb/text-message (str "Space is way too dangerous on your own " (format "%c" (int 127773))))))
+
+(defn demotivate [user-id]
+  (fb/send-message user-id (fb/text-message "Did you know?"))
+  (fb/send-message user-id (fb/text-message (str "Your chances of becoming an astronaut on your own are embarrassingly close to zero " (format "%c" (int 127773))))))
+
+(defn subscribe [user-id]
+  (save-subscriber user-id)
+  (fb/send-message user-id (fb/text-message "Space is dangerous on your own."))
+  (fb/send-message user-id (fb/text-message (str "I hope I'll make a nice companion " (format "%c" (int 127773))))))
   
+(defn unsubscribe [user-id]
+  (delete-subscriber user-id)
+  (fb/send-message user-id (fb/text-message "It's sad to see you go."))
+  (fb/send-message user-id (fb/text-message (str "I'll be here if you need me again " (format "%c" (int 127773))))))
   

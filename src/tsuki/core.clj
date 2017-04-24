@@ -20,7 +20,7 @@
 (defroutes fb-routes
   (GET "/" [] (splash))
   (POST "/webhook" request
-                   (fb/handle-message request bot/on-message bot/on-postback bot/on-attachments)
+                   (fb/handle-message request bot/on-message bot/on-postback bot/on-attachments bot/on-quickreply)
                    {:status 200})
   (GET "/webhook" request
                   (fb/validate-webhook request)))

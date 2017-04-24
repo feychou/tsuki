@@ -31,3 +31,20 @@
   (println "on-attachment payload:")
   (println payload)
   (actions/send-astro-emoji (get-in payload [:sender :id])))
+
+(defn on-quickreply [payload]
+  (println "on-quickreply payload:")
+  (println payload)
+  (let [sender-id (get-in payload [:sender :id])
+        recipient-id (get-in payload [:recipient :id])
+        time-of-message (get-in payload [:timestamp])
+        message (get-in payload [:message])
+        quick-reply (get-in payload [:message :quick_reply])
+        quick-reply-payload (get-in payload [:message :quick_reply :payload])]
+    (cond
+      (= quick-reply-payload "NO_SUBSCRIPTION") (actions/demotivate sender-id)
+      (= quick-reply-payload "NO_UNSUBSCRIPTION") (actions/motivate sender-id)
+      (= quick-reply-payload "SUBSCRIBE") (actions/subscribe sender-id)
+      (= quick-reply-payload "UNSUBSCRIBE") (actions/unsubscribe sender-id)
+      :else (fb/send-message sender-id (fb/text-message "Sorry, I don't know how to handle that quick reply.")))))
+
