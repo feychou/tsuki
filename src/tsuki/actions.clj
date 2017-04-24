@@ -58,7 +58,8 @@
     :tsuki-users {:fb-id user-id}))
 
 (defn get-subscriber [user-id]
-  (far/get-item utils/dynamo-creds :tsuki-users {:fb-id user-id}))
+  (far/get-item utils/dynamo-creds 
+    :tsuki-users {:fb-id user-id}))
 
 (defn greet [user-id]
   (go
