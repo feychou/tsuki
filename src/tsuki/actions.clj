@@ -45,12 +45,18 @@
                                                               :type "postback"
                                                               :payload "RANDOM_APOD"}]))))
 
+(defn send-astro-emoji [user-id]
+  (let [emojis [128125 128156 127773 127770 127776 128302 128126]]
+    (fb/send-message user-id (fb/text-message (format "%c" (int (rand-nth emojis)))))))
+
 (defn save-subscriber [user-id]
   (far/put-item utils/dynamo-creds
     :tsuki-users {:fb-id user-id}))
 
+(defn get-subscriber [user-id]
+  (far/get-item utils/dynamo-creds :tsuki-users {:fb-id user-id}))
+
 (defn greet [user-id]
-  (save-subscriber user-id)
   (go
     (fb/send-message user-id (fb/text-message "Hi earthling ☾"))
     (fb/type-on user-id)
@@ -70,6 +76,14 @@
           (send-astro-pic user-id chosen-pic)
           (send-astro-pic user-id (get-astro-pic utils/day-before-yesterday))))))
 
-(defn send-astro-emoji [user-id]
-  (let [emojis [128125 128156 127773 127770 127776 128302 128126]]
-    (fb/send-message user-id (fb/text-message (format "%c" (int (rand-nth emojis)))))))
+(defn on-manage-subscription [user-id]
+  (if (nil? (get-subscriber user-id))
+    (do
+      (fb/send-message user-id (fb/text-message "If you subscribe I'll make sure to send you a new astropic every day."))
+      (fb/send-message user-id (fb/quick-replies-message "Do you want to subscribe?"
+                                                         [{:content_type "text" :title "Yes" :payload "SUBSCRIBE"}
+                                                          {:content_type "text" :title "No" :payload "NO_SUBSCRIPTION"}])))
+    (do
+      (fb/send-message user-id (fb/text-message "Do you wish to unsubscribe?")))))
+  
+  

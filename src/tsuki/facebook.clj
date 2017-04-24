@@ -67,3 +67,7 @@
                 :payload {:template_type "button"
                           :text text
                           :buttons buttons}}})
+
+(defn quick-replies-message [message-text quick-replies]
+  {:text message-text
+   :quick_replies quick-replies})
