@@ -43,7 +43,7 @@
                              :url (str "https://apod.nasa.gov/apod/ap" (subs (first pic-date) 2 4) (second pic-date) (nth pic-date 2) ".html")}]))))
 
 (defn send-astropic-template [user-id pic & {:keys [toast menu] 
-                                           :or {toast false menu true}}]
+                                             :or {toast false menu true}}]
   (when (true? toast)
     (fb/send-message user-id (fb/text-message "Here is your astropic ☾")))
   (fb/send-message user-id (fb/image-message (:hdurl pic)))
@@ -99,12 +99,20 @@
     (do
       (fb/send-message user-id (fb/text-message (str "If you subscribe I'll make sure to send you a new astropic every day " (format "%c" (int 128302)))))
       (fb/send-message user-id (fb/quick-replies-message "Do you want to subscribe?"
-                                                         [{:content_type "text" :title "Yes" :payload "SUBSCRIBE"}
-                                                          {:content_type "text" :title "No" :payload "NO_SUBSCRIPTION"}])))
+                                                         [{:content_type "text"
+                                                           :title "Yes"
+                                                           :payload "SUBSCRIBE"}
+                                                          {:content_type
+                                                           "text" :title "No"
+                                                           :payload "NO_SUBSCRIPTION"}])))
     (do
       (fb/send-message user-id (fb/quick-replies-message "Do you want to unsubscribe?"
-                                                   [{:content_type "text" :title "Yes" :payload "UNSUBSCRIBE"}
-                                                    {:content_type "text" :title "No" :payload "NO_UNSUBSCRIPTION"}])))))
+                                                         [{:content_type "text"
+                                                           :title "Yes"
+                                                           :payload "UNSUBSCRIBE"}
+                                                          {:content_type "text"
+                                                           :title "No"
+                                                           :payload "NO_UNSUBSCRIPTION"}])))))
 
 (defn motivate [user-id]
   (fb/send-message user-id (fb/text-message "Good choice."))
