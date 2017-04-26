@@ -6,6 +6,7 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [tsuki.facebook :as fb]
             [tsuki.bot :as bot]
+            [tsuki.jobs :as jobs]
             ; Dependencies via Heroku Example
             [compojure.handler :refer [site]]
             [clojure.java.io :as io]
@@ -29,6 +30,10 @@
   (-> (wrap-defaults fb-routes api-defaults)
       (wrap-keyword-params)
       (wrap-json-params)))
+
+(defn run-jobs []
+  (println "Jobs running...")
+  (jobs/send-apod-to-subscribers))
 
 (defn -main [& args]
   (println "Started up"))

@@ -13,12 +13,15 @@
                  [ring/ring-jetty-adapter "1.5.0"]
                  [environ "1.1.0"]
                  [clojure.java-time "0.2.2"]
-                 [com.taoensso/faraday "1.9.0"]]
+                 [com.taoensso/faraday "1.9.0"]
+                 [clj-time "0.13.0"]
+                 [jarohen/chime "0.2.1"]]
   :min-lein-version "2.0.0"
   :plugins [[lein-ring "0.9.7"]
             [lein-environ "1.1.0"]]
   ;:hooks [environ.leiningen.hooks]
-  :ring {:handler tsuki.core/app}
+  :ring {:init tsuki.core/run-jobs
+         :handler tsuki.core/app}
   :uberjar-name "tsuki-standalone.jar")
   ; :profiles {:default [:base :dev :user]
   ;            #_:production #_{:env {:production false}}})
