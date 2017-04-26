@@ -21,29 +21,42 @@
 (defn get-chunks [chunk]
   (re-seq #"[^.!?;]+[.!?;]?" chunk))
 
-(defn send-astro-pic [user-id pic]
+(defn send-menu [user-id]
+  (fb/send-message user-id 
+  (fb/button-template "What do you want me to do next?"
+                      [{:title "Send today's APOD"
+                        :type "postback"
+                        :payload "TODAY_APOD"}
+                       {:title "Send yda's APOD"
+                        :type "postback"
+                        :payload "YESTERDAY_APOD"}
+                       {:title "Send random APOD"
+                        :type "postback"
+                        :payload "RANDOM_APOD"}])))
+
+(defn send-apod-description [user-id pic]
+  (let [pic-date (s/split (:date pic) #"-")]
+    (fb/send-message user-id 
+      (fb/button-template (first (get-chunks (:explanation pic))) 
+                           [{:title "Read more"
+                             :type "web_url"
+                             :url (str "https://apod.nasa.gov/apod/ap" (subs (first pic-date) 2 4) (second pic-date) (nth pic-date 2) ".html")}]))))
+
+(defn send-astropic-template [user-id pic & {:keys [toast menu] 
+                                           :or {toast false menu true}}]
+  (when (true? toast)
+    (fb/send-message user-id (fb/text-message "Here is your astropic ☾")))
   (fb/send-message user-id (fb/image-message (:hdurl pic)))
   (go
     (fb/send-message user-id (fb/text-message (:title pic)))
     (fb/type-on user-id)
     (<! (timeout 2000))
-    (let [pic-date (s/split (:date pic) #"-")]
-      (fb/send-message user-id 
-        (fb/button-template (first (get-chunks (:explanation pic))) [{:title "Read more"
-                                                                       :type "web_url"
-                                                                       :url (str "https://apod.nasa.gov/apod/ap" (subs (first pic-date) 2 4) (second pic-date) (nth pic-date 2) ".html")}])))
-    (fb/type-on user-id)
-    (<! (timeout 1000))
-    (fb/send-message user-id 
-      (fb/button-template "What do you want me to do next?" [{:title "Send today's APOD"
-                                                              :type "postback"
-                                                              :payload "TODAY_APOD"}
-                                                             {:title "Send yda's APOD"
-                                                              :type "postback"
-                                                              :payload "YESTERDAY_APOD"}
-                                                             {:title "Send random APOD"
-                                                              :type "postback"
-                                                              :payload "RANDOM_APOD"}]))))
+    (send-apod-description user-id pic)
+    (when (true? menu) 
+      ((fb/type-on user-id)
+       (<! (timeout 1000)
+       (send-menu user-id))))))
+
 
 (defn send-astro-emoji [user-id]
   (let [emojis [128125 128156 127773 127770 127776 128302 128126]]
@@ -72,16 +85,16 @@
     (fb/send-message user-id (fb/text-message "Tap on the menu icon below whenever you feel like it."))))
 
 (defn on-menu-pick
-  ([user-id] (send-astro-pic user-id (get-today-astro-pic)))
-  ([user-id date] (send-astro-pic user-id (get-astro-pic date)))
+  ([user-id] (send-astropic-template user-id (get-today-astro-pic)))
+  ([user-id date] (send-astropic-template user-id (get-astro-pic date)))
   ([user-id date postback] 
     (let [today-pic (get-today-astro-pic)
           chosen-pic (get-astro-pic date)]
         (if (not= (:url today-pic) (:url chosen-pic))
-          (send-astro-pic user-id chosen-pic)
-          (send-astro-pic user-id (get-astro-pic utils/day-before-yesterday))))))
+          (send-astropic-template user-id chosen-pic)
+          (send-astropic-template user-id (get-astro-pic utils/day-before-yesterday))))))
 
-(defn on-manage-subscription [user-id]
+(defn on-manage-subscription [user-id] 
   (if (nil? (get-subscriber user-id))
     (do
       (fb/send-message user-id (fb/text-message (str "If you subscribe I'll make sure to send you a new astropic every day " (format "%c" (int 128302)))))
