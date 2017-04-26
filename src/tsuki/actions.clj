@@ -64,15 +64,15 @@
 
 (defn save-subscriber [user-id]
   (far/put-item utils/dynamo-creds
-    :tsuki-users {:fb-id user-id}))
+                :tsuki-users {:fb-id user-id}))
 
 (defn delete-subscriber [user-id]
   (far/delete-item utils/dynamo-creds
-    :tsuki-users {:fb-id user-id}))
+                   :tsuki-users {:fb-id user-id}))
 
 (defn get-subscriber [user-id]
   (far/get-item utils/dynamo-creds 
-    :tsuki-users {:fb-id user-id}))
+                :tsuki-users {:fb-id user-id}))
 
 (defn greet [user-id]
   (go
