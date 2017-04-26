@@ -18,4 +18,4 @@
               (println "Chiming at " time)
               (println (str "All ids " (far/scan utils/dynamo-creds :tsuki-users)))
               (doseq [subscriber (far/scan utils/dynamo-creds :tsuki-users)]
-                      (actions/send-astropic-template (:fb-id subscriber) (actions/get-today-astro-pic) :toast true :menu false)))))
+                     (actions/send-astropic-template (:fb-id subscriber) (actions/get-today-astro-pic) :toast true :menu false)))))
