@@ -17,8 +17,7 @@
         {:status 200 :body (params "hub.challenge")}
         {:status 403})))
 
-(defn handle-message [request on-message on-postback on-attachments]
-  ; TODO: IMPLEMENT APP_SECRET VALIDATION
+(defn handle-message [request on-message on-postback on-attachments on-quickreply]
   (println "Incoming Request:")
   (println request)
   (let [data (get-in request [:params])]
@@ -28,6 +27,7 @@
           ; Check for message (onMessage) or postback (onPostback) here
           (cond (contains? messaging-event :postback) (on-postback messaging-event)
                 (contains? messaging-event :message) (cond (contains? (:message messaging-event) :attachments) (on-attachments messaging-event)
+                                                           (contains? (:message messaging-event) :quick_reply) (on-quickreply messaging-event)
                                                            :else (on-message messaging-event))
                 :else (println (str "Webhook received unknown messaging-event: " messaging-event))))))))
 
@@ -67,3 +67,7 @@
                 :payload {:template_type "button"
                           :text text
                           :buttons buttons}}})
+
+(defn quick-replies-message [message-text quick-replies]
+  {:text message-text
+   :quick_replies quick-replies})
