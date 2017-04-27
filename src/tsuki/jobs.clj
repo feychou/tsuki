@@ -11,7 +11,7 @@
 (def interval 
   (->> (periodic-seq (.. (t/now)
                          (withZone (DateTimeZone/forID "Europe/Berlin"))
-                         (withTime 09 0 0 0))
+                         (withTime 9 0 0 0))
                      (-> 1 t/days))))
 
 (defn send-apod-to-subscribers []
