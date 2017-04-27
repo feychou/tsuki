@@ -59,7 +59,7 @@
 
 
 (defn send-astro-emoji [user-id]
-  (let [emojis [128125 128156 127773 127770 127776 128302 128126]]
+  (let [emojis [128125 128156 127773 127770 127776 128302 128126 128640]]
     (fb/send-message user-id (fb/text-message (format "%c" (int (rand-nth emojis)))))))
 
 (defn save-subscriber [user-id]
