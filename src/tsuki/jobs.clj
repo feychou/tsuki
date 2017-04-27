@@ -1,5 +1,5 @@
 (ns tsuki.jobs
-	(:gen-class)
+  (:gen-class)
   (:require [tsuki.actions :as actions]
             [tsuki.utils :as utils]
             [chime :refer [chime-at]]
