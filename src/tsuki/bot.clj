@@ -9,16 +9,18 @@
 (defn on-message [payload]
   (println "on-message payload:")
   (println payload)
-  (actions/send-astro-emoji (get-in payload [:sender :id])))
+  (let [sender-id (get-in payload [:sender :id])
+        message-text (get-in payload [:message :text])]
+    (cond
+      (= (s/lower-case message-text) "subscribe") (actions/subscribe sender-id)
+      (= (s/lower-case message-text) "unsubscribe") (actions/unsubscribe sender-id)
+      :else (actions/send-astro-emoji sender-id))))
 
 (defn on-postback [payload]
   (println "on-postback payload:")
   (println payload)
   (let [sender-id (get-in payload [:sender :id])
-        recipient-id (get-in payload [:recipient :id])
-        time-of-message (get-in payload [:timestamp])
-        postback (get-in payload [:postback :payload])
-        referral (get-in payload [:postback :referral :ref])]
+        postback (get-in payload [:postback :payload])]
     (cond
       (= postback "GET_STARTED") (actions/greet sender-id)
       (= postback "TODAY_APOD") (actions/on-menu-pick sender-id)
@@ -36,9 +38,6 @@
   (println "on-quickreply payload:")
   (println payload)
   (let [sender-id (get-in payload [:sender :id])
-        recipient-id (get-in payload [:recipient :id])
-        time-of-message (get-in payload [:timestamp])
-        message (get-in payload [:message])
         quick-reply (get-in payload [:message :quick_reply])
         quick-reply-payload (get-in payload [:message :quick_reply :payload])]
     (cond
