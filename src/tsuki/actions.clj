@@ -125,7 +125,7 @@
 (defn subscribe [user-id]
   (save-subscriber user-id)
   (fb/send-message user-id (fb/text-message "Space is dangerous on your own."))
-  (fb/send-message user-id (fb/text-message (str "I hope I'll make a nice companion " utils/full-moon))))
+  (fb/send-message user-id (fb/text-message (str "I hope I'll make for a nice companion " utils/full-moon))))
   
 (defn unsubscribe [user-id]
   (delete-subscriber user-id)
