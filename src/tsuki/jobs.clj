@@ -5,12 +5,14 @@
             [chime :refer [chime-at]]
             [clj-time.core :as t]
             [clj-time.periodic :refer [periodic-seq]]
-            [taoensso.faraday :as far]))
+            [taoensso.faraday :as far])
+  (:import [org.joda.time DateTimeZone]))
 
 (def interval 
-  (rest
-   (periodic-seq (t/now)
-                 (-> 30 t/seconds))))
+  (->> (periodic-seq (.. (t/now)
+                         (withZone (DateTimeZone/forID "Europe/Berlin"))
+                         (withTime 09 0 0 0))
+                     (-> 1 t/days))))
 
 (defn send-apod-to-subscribers []
   (chime-at interval
