@@ -120,7 +120,7 @@
 (defn on-manage-subscription [user-id] 
   (if (nil? (get-subscriber user-id))
     (send-subscribe-prompt user-id)
-    (send-unsubscribe-prompt user-id)
+    (send-unsubscribe-prompt user-id)))
 
 
 (defn motivate [user-id]
