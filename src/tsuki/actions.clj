@@ -21,6 +21,25 @@
 (defn get-chunks [chunk]
   (re-seq #"[^.!?;]+[.!?;]?" chunk))
 
+(defn send-subscribe-prompt [user-id]
+  (fb/send-message user-id (fb/text-message (str "If you subscribe I'll make sure to send you a new astropic every day " (format "%c" (int 128302)))))
+  (fb/send-message user-id (fb/quick-replies-message "Do you want to subscribe?"
+                                                     [{:content_type "text"
+                                                       :title "Yes"
+                                                       :payload "SUBSCRIBE"}
+                                                      {:content_type
+                                                       "text" :title "No"
+                                                       :payload "NO_SUBSCRIPTION"}])))
+
+(defn send-unsubscribe-prompt [user-id]
+  (fb/send-message user-id (fb/quick-replies-message "Do you want to unsubscribe?"
+                                                     [{:content_type "text"
+                                                       :title "Yes"
+                                                       :payload "UNSUBSCRIBE"}
+                                                      {:content_type "text"
+                                                       :title "No"
+                                                       :payload "NO_UNSUBSCRIPTION"}])))
+
 (defn send-menu [user-id]
   (fb/send-message user-id 
   (fb/button-template "What do you want me to do next?"
@@ -42,8 +61,8 @@
                              :type "web_url"
                              :url (str "https://apod.nasa.gov/apod/ap" (subs (first pic-date) 2 4) (second pic-date) (nth pic-date 2) ".html")}]))))
 
-(defn send-astropic-template [user-id pic & {:keys [toast menu] 
-                                             :or {toast false menu true}}]
+(defn send-astropic-template [user-id pic & {:keys [toast menu subscribe-prompt] 
+                                             :or {toast false menu true subscribe-prompt false}}]
   (when (true? toast)
     (fb/send-message user-id (fb/text-message "Here is your astropic ☾")))
   (fb/send-message user-id (fb/image-message (:hdurl pic)))
@@ -55,7 +74,9 @@
     (when (true? menu) 
       ((fb/type-on user-id)
        (<! (timeout 1000)
-       (send-menu user-id))))))
+       (send-menu user-id))))
+    (when (true? subscribe-prompt)
+      (send-subscribe-prompt user-id))))
 
 
 (defn send-astro-emoji [user-id]
@@ -85,7 +106,9 @@
     (fb/send-message user-id (fb/text-message "Tap on the menu icon below whenever you feel like it."))))
 
 (defn on-menu-pick
-  ([user-id] (send-astropic-template user-id (get-today-astro-pic)))
+  ([user-id] 
+    (let [is-subscriber (not (nil? (get-subscriber user-id)))]
+      (send-astropic-template user-id (get-today-astro-pic) :menu is-subscriber :subscribe-prompt (not is-subscriber))))
   ([user-id date] (send-astropic-template user-id (get-astro-pic date)))
   ([user-id date postback] 
     (let [today-pic (get-today-astro-pic)
@@ -96,31 +119,17 @@
 
 (defn on-manage-subscription [user-id] 
   (if (nil? (get-subscriber user-id))
-    (do
-      (fb/send-message user-id (fb/text-message (str "If you subscribe I'll make sure to send you a new astropic every day " (format "%c" (int 128302)))))
-      (fb/send-message user-id (fb/quick-replies-message "Do you want to subscribe?"
-                                                         [{:content_type "text"
-                                                           :title "Yes"
-                                                           :payload "SUBSCRIBE"}
-                                                          {:content_type
-                                                           "text" :title "No"
-                                                           :payload "NO_SUBSCRIPTION"}])))
-    (do
-      (fb/send-message user-id (fb/quick-replies-message "Do you want to unsubscribe?"
-                                                         [{:content_type "text"
-                                                           :title "Yes"
-                                                           :payload "UNSUBSCRIBE"}
-                                                          {:content_type "text"
-                                                           :title "No"
-                                                           :payload "NO_UNSUBSCRIPTION"}])))))
+    (send-subscribe-prompt user-id)
+    (send-unsubscribe-prompt user-id)
+
 
 (defn motivate [user-id]
   (fb/send-message user-id (fb/text-message "Good choice."))
   (fb/send-message user-id (fb/text-message (str "Space is way too dangerous on your own " utils/full-moon))))
 
 (defn demotivate [user-id]
-  (fb/send-message user-id (fb/text-message "Did you know?"))
-  (fb/send-message user-id (fb/text-message (str "Your chances of becoming an astronaut on your own are embarrassingly close to zero " utils/full-moon))))
+  (fb/send-message user-id (fb/text-message (str "Your chances of becoming an astronaut on your own are embarrassingly close to zero " utils/full-moon)))
+  (fb/send-message user-id (fb/text-message "Did you know?")))
 
 (defn subscribe [user-id]
   (save-subscriber user-id)
