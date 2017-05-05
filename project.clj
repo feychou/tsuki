@@ -19,6 +19,12 @@
   :min-lein-version "2.0.0"
   :plugins [[lein-ring "0.9.7"]
             [lein-environ "1.1.0"]]
+  ;; Enable full optimizer, don't let heap or metaspace get too big
+  ;; 260+140=400 allowing 112mb for the process
+  ;; finally adding the max direct mem size.  see what that does
+  :jvm-opts ^:replace ["-Xss512k" "-Xms128m" "-Xmx260m"
+                       "-XX:MaxMetaspaceSize=140m"
+                       "-XX:MaxDirectMemorySize=50m"]
   ;:hooks [environ.leiningen.hooks]
   :ring {:init tsuki.core/run-jobs
          :handler tsuki.core/app}
