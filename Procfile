@@ -1,1 +1,1 @@
-web: lein ring server-headless
+web: java -jar target/tsuki-standalone.jar
