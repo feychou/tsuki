@@ -113,7 +113,7 @@
   ([user-id date postback] 
     (let [today-pic (get-today-astro-pic)
           chosen-pic (get-astro-pic date)]
-        (if (not= (:date today-pic) (:date chosen-pic))
+        (if (not= (:url today-pic) (:url chosen-pic))
           (send-astropic-template user-id chosen-pic)
           (send-astropic-template user-id (get-astro-pic utils/day-before-yesterday))))))
 
